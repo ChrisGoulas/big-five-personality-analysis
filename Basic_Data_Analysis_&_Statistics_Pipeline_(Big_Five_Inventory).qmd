@@ -113,7 +113,7 @@ clean_data <- clean_data  %>%
   drop_na(gender, education, age) 
 ```
 
-## 2. Reverse Coding & Scale Scoring
+## 2. Reverse Coding and Scale Scoring
 
 Several items in the BFI are negatively scored. To calculate an accurate total score, we must reverse these item scores. For that we can use the `reverse.code()` function from the 'psych' @psych-7 package:
 
@@ -181,7 +181,7 @@ print(alpha_results)
 
 Internal consistency for the five composite personality scales was evaluated using Cronbach's alpha. Neuroticism ($\alpha = .81$), Extraversion ($\alpha = .77$), and Conscientiousness ($\alpha = .72$) demonstrated acceptable to good reliability. Agreeableness showed marginal, yet practically adequate, internal consistency ($\alpha = .69$). The Openness to Experience scale exhibited lower reliability ($\alpha = .61$), which is common for this construct due to the broad nature of its items. Overall, the composite scores showed adequate reliability of our analysis.
 
-## 4. Descriptive Statistics & Normality Checks
+## 4. Descriptive Statistics and Normality Checks
 
 Before running parametric tests, we must generate descriptive statistics to understand the central tendency and dispersion of our data. Then, we check for normality to ensure that we meet the assumptions for parametric inferential statistics.
 
@@ -205,20 +205,33 @@ new_scored_data %>%
   print()
 ```
 
-### 4.2 Numeric Normality Checks
+### 4.2 Descriptive Statistics of Personality Traits and Numeric Normality Checks
 
-Descriptive statistics (mean, SD, min, max) and normality indicators were calculated using the function `psych::describe()`.
+Descriptive statistics (mean, variance, SD, min, max) and normality indicators were calculated using the function `psych::describe()`.
 
-NOTE: We avoid formal statistical tests for normality (e.g., Kolmogorov-Smirnov, Shapiro-Wilk) and Z-scores, because, due to their high statistical power in large samples, they flag even trivial deviations from normality as significant (p \< .05). Therefore, following @kim2013 , normality is assessed using visual inspection and absolute threshold values. Specifically, an absolute skewness value of $< 2.0$ and an absolute kurtosis value of $< 7.0$ indicate "substantial normality."
+We avoid formal statistical tests for normality (e.g., Kolmogorov-Smirnov, Shapiro-Wilk) and Z-scores, because, due to their high statistical power in large samples, they flag even trivial deviations from normality as significant (p \< .05). Therefore, following @kim2013 , normality is assessed using visual inspection and absolute threshold values. Specifically, an absolute skewness value of $< 2.0$ and an absolute kurtosis value of $< 7.0$ indicate "substantial normality."
 
 ```{r}
-cat("\n---DESCRIPTIVE ANALYSIS OF PERSONALITY TRAITS & NUMERICAL NORMALITY (SKEWNESS & KURTOSIS) ---\n")
+# Descriptive Statistics of Personality Traits
+cat("\n---DESCRIPTIVE ANALYSIS OF PERSONALITY TRAITS---\n")
+descrip_stats <- new_scored_data %>%
+  select(Agreeableness:Openness) %>%
+  psych::describe() %>%
+  as.data.frame() %>%
+  rownames_to_column(var = "Variable") %>% 
+  mutate(Var = sd^2) %>%
+  select(Variable, Mean = mean, Var, SD = sd, Min = min, Max = max)
+
+print(descrip_stats)
+
+# Numeric Normality Checks 
+cat("\n---NUMERICAL NORMALITY (SKEWNESS & KURTOSIS)---\n") 
 normality_table <- new_scored_data %>% 
   select(Agreeableness:Openness) %>% 
   psych::describe() %>% 
   as.data.frame() %>% 
   select(n, mean, sd, skew, kurtosis) %>%
-# Apply the abs() function for the absolute values of Skewness and Kurtosis
+  # Apply the abs() function for the absolute values of Skewness and Kurtosis
   mutate( abs_skew = abs(skew), abs_kurtosis = abs(kurtosis) ) %>% 
   select(n, mean, sd, abs_skew, abs_kurtosis)
 
