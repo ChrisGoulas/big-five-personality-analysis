@@ -84,26 +84,11 @@ The original rendered analysis reported the following findings:
 
 ### Install Required Packages
 
-Run the following command in the R console:
-
-```r
-install.packages(c(
-  "tidyverse",
-  "psych",
-  "car",
-  "effectsize"
-))
-```
+Install the required packages ("tidyverse", "psych", "car", "effectsize") with the `install.packages()` function, if you haven't already, and load them using the `library()` function.
 
 ### Render the Analysis
 
 Open `Basic_Data_Analysis_&_Statistics_Pipeline_(Big_Five_Inventory).qmd` in RStudio and render it using Quarto.
-
-Alternatively, run:
-
-```r
-quarto::quarto_render("Basic_Data_Analysis_&_Statistics_Pipeline_(Big_Five_Inventory).qmd")
-```
 
 ## Purpose
 
